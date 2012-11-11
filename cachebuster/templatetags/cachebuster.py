@@ -60,13 +60,12 @@ class CacheBusterTag(template.Node):
                     # over the contrib version.
                     # This has been moved into the body of the class because
                     # of a compile time race condition with settings.
-                    try:
+                    if 'staticfiles' in settings.INSTALLED_APPS:
                         from staticfiles import finders
-                        self._finders = finders
-                    except ImportError, e:
-                        print "ERROR importing staticfiles.finders: %s" % e
+                    else:
                         from django.contrib.staticfiles import finders
-                        self._finders = finders
+                    self._finders = finders
+
                 absolute_path = self._finders.find(path)
 
             if absolute_path is None:
